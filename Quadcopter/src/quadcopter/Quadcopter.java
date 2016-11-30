@@ -16,7 +16,7 @@ public class Quadcopter {
      */
     public static void main(String[] args) {
         System.out.println("hello world");
-        int num = 3;
+        int num = 6;
     }
     
 }
