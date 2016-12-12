@@ -28,6 +28,14 @@
         </script>
     </head>
     <body>
+		<input type="text" id="textInput">
+		<button id="button_send" onclick="sendMessage()">Send</button>
         <ul id='messages'></ul>
+		<script>
+			var input = document.getElementById("textInput");
+			function sendMessage(){
+				socket.emit(input.text);
+			}
+		</scipt>
     </body>
 </html>

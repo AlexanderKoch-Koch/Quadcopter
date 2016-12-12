@@ -33,6 +33,9 @@ public class Quadcopter {
             Thread.sleep(30);
             int heading, roll, pitch = 0;
             byte[] data = new byte[6];
+            //SocketConnection.setup();
+            //SocketConnection socketConnection = new SocketConnection();
+            //socketConnection.run();
             
             while(true){
                 bno055.read(BNO055Bytes.EUL_Heading_LSB, data, 0, 6);
@@ -40,7 +43,16 @@ public class Quadcopter {
                 heading = Conversion.bytesToInt(data[0], data[1]);
                 roll = Conversion.bytesToInt(data[2], data[3]);
                 pitch = Conversion.bytesToInt(data[4], data[5]);
-                System.out.println(heading + " " + pitch + " " + roll);
+                
+                if(heading >= 0 && heading <= 5780){
+                    if(roll >= -1440 && roll <= 1440){
+                        if(pitch >= -1440 && pitch <= 1440){
+                            System.out.println(heading + " " + pitch + " " + roll);
+                        }
+                    }
+                }
+                
+                Thread.sleep(1);
             }
             
             
