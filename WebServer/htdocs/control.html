@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Quadcopter</title>
+	<link rel="stylesheet" href="switch.css">
+	<link rel="stylesheet" href="control.css">
+</head>
+<body>
+	<a href="/index.html">Index</a>
+	Control
+	<br>
+	<div class="controlBlock">
+		
+		<p id="ledLabel">Led: </p>
+		<label class="switch" >
+			<input id="ledSwitch" type="checkbox" onclick="updateLedState()">
+			<div class="slider round"></div>
+		</label>
+	</div>
+	<div  id="messagesBox" class="controlBlock">
+		
+		<p>Messages: </p>
+		<p id="messagesParagraph"></p>
+	</div>
+	<div class="controlBlock">
+		
+		<p>System: </p>
+		<p id="systemInfoParagraph"></p>
+	</div>
+	<p id="number">unknown</p>
+
+	
+	
+	<script src='/socket.io/socket.io.js'></script>
+	<script>
+            var socket = io();
+			//var number = document.getElementById("number");
+            socket.on('welcome', function(data){
+				//alert(data);
+                //addMessage(data.message);
+                // Respond with a message including this clients' id sent from the server
+                socket.emit('i am client', {data: 'foo!', id: data.id});
+            });
+
+            socket.on('error', console.error.bind(console));
+            socket.on('message', function(data){
+				if("message" in data){
+					document.getElementById("messagesParagraph").innerHTML += data.message.toString();
+				}
+				if("systemInfo" in data){
+					document.getElementById("systemInfoParagraphesParagraph").innerHTML += data.systemInfo.toString();
+				}
+			});
+
+			socket.on("number", function(data){
+				document.getElementById("number").innerHTML = data.number.toString();
+			});
+			
+
+			
+			function updateLedState(){
+				socket.emit('message', {GPIO: {1: document.getElementById("ledSwitch").checked}});
+			}
+        </script>
+<body>
