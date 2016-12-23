@@ -35,12 +35,15 @@ public final class NodeJsConnection{
     public static void setup(){
         try {
             SocketAddress address = new InetSocketAddress(HOST, PORT);
+            
             socket = new Socket();
             socket.setReuseAddress(true);
             socket.connect(address);
+            System.out.println("connection successfully established");
             outputStream = socket.getOutputStream();
             out = new BufferedWriter(new OutputStreamWriter(outputStream));
             inputStream = socket.getInputStream();
+            out.write("{message:\"hello\"}");
             thread = new NodeJsConnectionThread(inputStream);
             thread.start();
             
@@ -52,13 +55,15 @@ public final class NodeJsConnection{
     public static void sendMessage(String message){
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("message", message);
+        sendJson(jsonObject);
+    }
+    
+    public static void sendJson(JsonObject jsonObject){
         try{
             jsonObject.writeTo(out);
-            //out.append("{\"message:\"" + message + "\"}").append("\n");
             out.flush(); 
         }catch(Exception ex){
             System.out.println(ex);
         }
-        
     }
 }

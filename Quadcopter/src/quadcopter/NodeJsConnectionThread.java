@@ -12,18 +12,28 @@ public class NodeJsConnectionThread extends Thread{
     volatile boolean run = true;
     BufferedReader reader;
     protected static Vector _listeners;//listening objects
+    InputStream inputStream;
      
     public NodeJsConnectionThread(InputStream input){
+        this.inputStream = input;
         reader = new BufferedReader(new InputStreamReader(input));
     }
     
     public void run(){
-        String msg;
+        char[] receivedbytes = new char[1024];
+        int currentIndex = 0;
+        
         while(run){
             try{
-                if(reader.ready()){
-                    msg = reader.readLine();
+                receivedbytes[currentIndex] =  (char) inputStream.read();          
+                if(receivedbytes[currentIndex] == '\n'){
+                    String msg = new String(receivedbytes, 0, currentIndex);
                     fireCommandEvent(msg);
+                    
+                    //overwrite array from beginning
+                    currentIndex = 0;
+                }else{
+                    currentIndex++;
                 }
             }catch(Exception ex){
                     System.out.println(ex);
