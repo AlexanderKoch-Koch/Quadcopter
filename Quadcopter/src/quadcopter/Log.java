@@ -11,6 +11,11 @@ import com.eclipsesource.json.JsonObject;
  *
  * @author Alexander
  */
-public interface WebCommandInterface {
-    void commandReceived(JsonObject command);
+public class Log {
+    
+    public static void e(String errorMessage){
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("error", errorMessage);
+        NodeJsConnection.sendMessage(jsonObject);
+    }
 }

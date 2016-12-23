@@ -20,19 +20,19 @@ public class Lighting implements WebCommandInterface{
     }
 
     @Override
-    public void commandReceived(String command) {
+    public void commandReceived(JsonObject command) {
         System.out.println("Lighting Object received: " + command);
-        if(JsonObject.readFrom(command).get("lighting") != null){
-            updatePinStates(JsonObject.readFrom(command).get("lighting").asObject());
+        if(command.get("lighting") != null){
+            updatePinStates(command.get("lighting").asObject());
         }
     }
     
     public void updatePinStates(JsonObject jsonObject){
-        boolean value = JsonObject.readFrom("1").get("lighting").asBoolean();
+        /*boolean value = JsonObject.readFrom("1").get("lighting").asBoolean();
         if(value == false){
             GPIO.LED1.setState(PinState.LOW);
         }else if(value == true){
             GPIO.LED1.setState(PinState.HIGH);
-        }
+        }*/
     }
 }

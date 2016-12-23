@@ -19,8 +19,12 @@ public class SystemInfoProvider {
             public void run()  {
                 try{
                     JsonObject jsonObject = new JsonObject();
-                    jsonObject.add("systemInfo", SystemInfo.getCpuTemperature());
-                    NodeJsConnection.sendJson(jsonObject);
+                    jsonObject.add("cpuTemperature", SystemInfo.getCpuTemperature());
+                    jsonObject.add("clockFrequencyPWM", SystemInfo.getClockFrequencyPWM());
+                    jsonObject.add("cpuVoltage", SystemInfo.getCpuVoltage());
+                    jsonObject.add("javaVersion", SystemInfo.getJavaVersion());
+                    jsonObject.add("memoryUsed", Math.round(SystemInfo.getMemoryUsed() * 0.000001));    //convert to MBytes
+                    NodeJsConnection.sendSystemInfo(jsonObject);
                 }
                 catch(Exception ex){
                 }

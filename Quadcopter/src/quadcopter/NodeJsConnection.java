@@ -43,7 +43,6 @@ public final class NodeJsConnection{
             outputStream = socket.getOutputStream();
             out = new BufferedWriter(new OutputStreamWriter(outputStream));
             inputStream = socket.getInputStream();
-            out.write("{message:\"hello\"}");
             thread = new NodeJsConnectionThread(inputStream);
             thread.start();
             
@@ -52,10 +51,11 @@ public final class NodeJsConnection{
         }
     }
     
-    public static void sendMessage(String message){
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("message", message);
-        sendJson(jsonObject);
+    public static void sendMessage(JsonObject jsonObject){        
+        JsonObject outerJsonObject = new JsonObject();
+        outerJsonObject.add("message", jsonObject);
+        
+        sendJson(outerJsonObject);
     }
     
     public static void sendJson(JsonObject jsonObject){
@@ -65,5 +65,12 @@ public final class NodeJsConnection{
         }catch(Exception ex){
             System.out.println(ex);
         }
+    }
+    
+    public static void sendSystemInfo(JsonObject jsonObject){
+        JsonObject outerJsonObject = new JsonObject();
+        outerJsonObject.add("systemInfo", jsonObject);
+        
+        sendJson(outerJsonObject);
     }
 }

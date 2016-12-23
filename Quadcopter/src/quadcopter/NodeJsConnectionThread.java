@@ -1,11 +1,13 @@
 
 package quadcopter;
 
+import com.eclipsesource.json.JsonObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.Vector;
+import netscape.javascript.JSObject;
 
 public class NodeJsConnectionThread extends Thread{
     
@@ -20,15 +22,27 @@ public class NodeJsConnectionThread extends Thread{
     }
     
     public void run(){
-        char[] receivedbytes = new char[1024];
+        char[] receivedBytes = new char[1024];
         int currentIndex = 0;
         
         while(run){
             try{
-                receivedbytes[currentIndex] =  (char) inputStream.read();          
-                if(receivedbytes[currentIndex] == '\n'){
-                    String msg = new String(receivedbytes, 0, currentIndex);
-                    fireCommandEvent(msg);
+                if(currentIndex >= receivedBytes.length){
+                    Log.e("Message from NodeJs Server longer than " + receivedBytes.length + " bytes" + 
+                            "\nno \\n found");
+                    currentIndex = 0;
+                }
+                receivedBytes[currentIndex] =  (char) inputStream.read();          
+                if(receivedBytes[currentIndex] == '\n'){
+                    String msg = new String(receivedBytes, 0, currentIndex);
+                    
+                    try{
+                        JsonObject jsonObject = JsonObject.readFrom(msg);
+                        fireCommandEvent(jsonObject);
+                    }catch(Exception ex){
+                        System.out.println("non json command: " + msg);
+                    }
+                    
                     
                     //overwrite array from beginning
                     currentIndex = 0;
@@ -36,7 +50,7 @@ public class NodeJsConnectionThread extends Thread{
                     currentIndex++;
                 }
             }catch(Exception ex){
-                    System.out.println(ex);
+                    System.out.println("NodeJsConnectionThread: " + ex);
             }      
         }
     }
@@ -54,7 +68,7 @@ public class NodeJsConnectionThread extends Thread{
     }
      
     // "fires" the event
-    protected  void fireCommandEvent(String command)
+    protected  void fireCommandEvent(JsonObject command)
     {
         //System.out.println("PHPConnection: fire:" + command);
         //System.out.println("listening "+ _listeners.toString()+ _listeners.isEmpty());
@@ -67,7 +81,7 @@ public class NodeJsConnectionThread extends Thread{
                 interfaceVar.commandReceived(command);
             }
         }else{
-            System.out.println("no listeners");
+            //System.out.println("no listeners");
         }
     }
 }

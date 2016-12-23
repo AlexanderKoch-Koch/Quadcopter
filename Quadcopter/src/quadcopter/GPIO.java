@@ -30,16 +30,16 @@ public final class GPIO implements WebCommandInterface{
     }
 
     @Override
-    public void commandReceived(String command) {
-        if(JsonObject.readFrom(command).get("GPIO") != null){
-            JsonObject GPIOJsonObject = JsonObject.readFrom(command).get("GPIO").asObject();
-            controlGPIO(GPIOJsonObject);
+    public void commandReceived(JsonObject command) {
+        if(command.get("GPIO") != null){
+            controlGPIO(command.get("GPIO").asObject());
         }
     }
     
     private void controlGPIO(JsonObject jsonObject){
         if(jsonObject.get("1") != null){
             boolean GPIO_1_value = jsonObject.get("1").asBoolean();
+            System.out.println("setting LED1 to " + GPIO_1_value);
             if(GPIO_1_value == true) GPIO.LED1.setState(PinState.HIGH);
             else GPIO.LED1.setState(PinState.LOW);
         }
