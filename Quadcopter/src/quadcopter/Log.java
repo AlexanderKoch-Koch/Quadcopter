@@ -18,4 +18,11 @@ public class Log {
         jsonObject.add("error", errorMessage);
         NodeJsConnection.sendMessage(jsonObject);
     }
+    
+    public static void d(String debugMessage){
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("debug", debugMessage);
+        NodeJsConnection.sendMessage(jsonObject);
+    }
+    
 }

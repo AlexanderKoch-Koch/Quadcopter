@@ -7,6 +7,7 @@ public class Quadcopter {
         NodeJsConnection.setup();
         GPIO.setup();
         SystemInfoProvider systemInfoProvider = new SystemInfoProvider();
+        BNO055 bno055 = new BNO055();
         Lighting lighting = new Lighting();
         Log.e("test");
     }

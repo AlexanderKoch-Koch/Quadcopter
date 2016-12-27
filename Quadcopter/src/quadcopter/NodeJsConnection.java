@@ -73,4 +73,11 @@ public final class NodeJsConnection{
         
         sendJson(outerJsonObject);
     }
+    
+    public static void sendSensors(JsonObject jsonObject){
+        JsonObject outerJsonObject = new JsonObject();
+        outerJsonObject.add("sensors", jsonObject);
+        
+        sendJson(outerJsonObject);
+    }
 }

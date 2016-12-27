@@ -1,8 +1,10 @@
 package quadcopter;
 
+import com.eclipsesource.json.JsonObject;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
+import com.pi4j.system.SystemInfo;
 
 public class BNO055Thread extends Thread{
     private I2CDevice bno055;
@@ -41,11 +43,19 @@ public class BNO055Thread extends Thread{
                         }
                     }
                 }
-                
-                Thread.sleep(1);
+                sendBNO055Data(roll, pitch, heading);
+                Thread.sleep(10);
             }
         }catch(Exception ex){
             System.out.println(ex);
         }
+    }
+    
+    private void sendBNO055Data(int roll, int pitch, int heading){
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("roll", roll);
+        jsonObject.add("pitch", pitch);
+        jsonObject.add("heading", heading);
+        NodeJsConnection.sendSensors(jsonObject);
     }
 }

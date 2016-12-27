@@ -25,6 +25,7 @@ public class SystemInfoProvider {
                     jsonObject.add("javaVersion", SystemInfo.getJavaVersion());
                     jsonObject.add("memoryUsed", Math.round(SystemInfo.getMemoryUsed() * 0.000001));    //convert to MBytes
                     NodeJsConnection.sendSystemInfo(jsonObject);
+                    Log.d("test");
                 }
                 catch(Exception ex){
                 }
